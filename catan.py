@@ -390,3 +390,4 @@ def agentCatan(state, per):
 
   action = validActions[np.random.randint(len(validActions))]
   return action, per
+
