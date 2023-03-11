@@ -103,8 +103,15 @@ def holdCard(state):
       if sum( arr ) < number and arr[1] + arr[2] <=2:
         number = sum( arr[arr > 0] )
         action = k + 16
-  return action ### hold thẻ cấp 3 ẩn
-
+        
+  if action >= 16 and action <= 27:
+    return action ### hold thẻ cấp 3 ẩn
+  else:
+    if getValidActions(state)[29]:
+      return 29
+    else:
+      return stt[np.random.randint(size)] + 16
+      
 @njit
 def agentSplendor_v2(state, per):
   validActions = getValidActions(state)
