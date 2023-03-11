@@ -114,7 +114,7 @@ def initPer():
   return per
   
 @njit
-def agent_dat(state, per):
+def agentSplendor_v2(state, per):
   validActions = getValidActions(state)
   actions = np.where(validActions)[0]
   # print(state)
