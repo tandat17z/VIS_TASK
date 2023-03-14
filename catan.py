@@ -1,29 +1,24 @@
-def ngLieuCuaVung(state):
-  return state[:95].reshape(19,5).copy()
-
-def mySettlements(state):
-  return state[276:330].copy()
-
-def myCities(state):
-  return state[330: 384].copy()
-
+@njit
 def vungKe( x): ### các ô gắn với đỉnh x
   x = int(x)
   vungKe = POINT_TILE[x]
   vungKe = vungKe[vungKe != -1]
   return vungKe
-
+  
+@njit
 def dinhKe( x): ### các đỉnh kề với đỉnh x
   x = int(x)
   dinhKe = POINT_POINT[x]
   dinhKe = dinhKe[dinhKe != -1]
   return dinhKe
 
+@njit
 def thuocTinhVung( state, x ): ### thuộc tính của ô x
   x = int(x)
   thuocTinh = np.zeros(6)
-  thuocTinh[1:6] = ngLieuCuaVung(state)[x]
-  value = [3,4,5,6,8,9,10,11,12]
+  ngLieuCacVung = state[:95].reshape(19,5)
+  thuocTinh[1:6] = ngLieuCacVung[x]
+  value = np.array([3,4,5,6,8,9,10,11,12])
   for i in range(9):
     arr = state[1048 + 19*i: 1048 + 19*(i+1)]
     if arr[x] == 1:
@@ -35,6 +30,7 @@ def thuocTinhVung( state, x ): ### thuộc tính của ô x
 
   return thuocTinh
 
+@njit
 def xacDinhDuongPhuHop(state, validActions ):
   # nhà của bản thân
   me = state[276:330] + state[330: 384] 
@@ -128,48 +124,7 @@ def xacDinhDuongPhuHop(state, validActions ):
   action = validActions[np.random.randint(len( validActions))]
   # print('---- random phase xây đường', action)
   return action
-
-def checkBuildRoad(state):
-  map = np.zeros(72)
-  # Khu của bản thân-----------------
-  me = state[276:330] + state[330: 384]  # nhà
-  if sum( me ) >= 4:
-    return False
-  # Đường
-  myRoad = state[204: 276] 
-  map[ myRoad > 0 ] = np.ones( len(myRoad[myRoad > 0]) )
-  roadP = np.zeros(54)
-  for i in np.where( myRoad)[0]:
-    roadP[ ROAD_POINT[i] ] = np.array([1, 1])
-  khuCuaToi = roadP
-  khuMoi = khuCuaToi
-  # khu của player khác-----------------
-  nhaPlayer = np.zeros(54) # nhà
-  roadPlayer = np.zeros(54) # đường
-  for i in range(3):
-    player_ = state[391 + 185*(i-1) + 75: 391 + 185*(i-1) + 129] + state[391 + 185*(i-1) + 129: 391 + 185*(i-1) + 183]
-    road_ = state[391 + 185*(i-1) + 3: 391 + 185*(i-1) + 75]
-    map[ road_ > 0 ] = np.ones( len( road_[road_ > 0]) )
-    for i in np.where(road_)[0]:
-      roadPlayer[ road_[i] ] = np.array([1, 1])
-    nhaPlayer += player_
-
-  #Lân cận nhà của tôi
-  lanCanNhaToi = me
-  for i in np.where( me )[0]:
-    lanCanNhaToi[ dinhKe(i) ] = np.ones(len( dinhKe(i)) )
-
-  #Lân cận nhà của player khác
-  lanCanNhaPlayer = nhaPlayer
-  for i in np.where( nhaPlayer )[0]:
-    lanCanNhaPlayer[ dinhKe(i) ] = np.ones(len( dinhKe(i)) )
-
-  #xác định khu mới khi thêm đường
-  for r in np.where( map== 0)[0]:
-    ab = ROAD_POINT[r]
-    if ab[0] in np.where( khuCuaToi)[0] or ab[1] in np.where( khuCuaToi)[0]:
-      khuMoi[ab] = np.array([1, 1])
-  
+@njit
 def firstSettlements(state, validActions): ### đặt nhà đầu tiên gần mỏ đá + lúa
   action = -1
   totalToiUu = np.zeros(6) ### điểm của đỉnh i
@@ -193,10 +148,10 @@ def firstSettlements(state, validActions): ### đặt nhà đầu tiên gần m�
     return action
   else:
     return validActions[np.random.randint(len(validActions))]
-
+@njit
 def secondSettlements(state, validActions): ### đặt nhà thứ hai gần cảng 
   #thông tin về nhà 1 để chọn cảng
-  stateNha = mySettlements(state)
+  stateNha = state[276:330] + state[330: 384]
   nha1 = np.where( stateNha )[0][0]
   arr = np.zeros(6) # value + 5ngLieu
   
@@ -212,13 +167,14 @@ def secondSettlements(state, validActions): ### đặt nhà thứ hai gần cả
   #Vi tri cảng cần tìm
   ngL = np.where( arr>0 )[0][-1] - 1 ## nguyên liệu để chọn cảng
   action = -1
-  patu = [1, 4, 11, 14, 21, 24]
-  typePort = [0, 1, 3, 4, 6, 7]
+  patu = np.array([1, 4, 11, 14, 21, 24])
+  typePort = np.array([0, 1, 3, 4, 6, 7])
   maxPoint = 0
   for i in validActions:
     if i in patu:
       arrPort = state[133:187].reshape(9, 6)
-      type_i = typePort[ np.where( patu == i)[0][0] ]
+      idx = int(np.where( patu == i)[0][0])
+      type_i = typePort[ idx ]
       port_i = arrPort[ type_i ] ###gỗ, gạch, cừu, lúa, đá, (1/3)
       point = 0
       if port_i[ ngL ]: 
@@ -246,7 +202,7 @@ def secondSettlements(state, validActions): ### đặt nhà thứ hai gần cả
           action = i
           maxPoint = point
   return action
-
+@njit
 def diChuyenRobber(state):
   validActions = getValidActions(state)
   if sum( validActions[64: 83]):
@@ -273,7 +229,7 @@ def diChuyenRobber(state):
       return 64
   else:
     return 0
-
+@njit
 def dungKnightTruoc(state, validActions):
   if 54 in validActions and 55 in validActions:
     # Khu của bản thân-----------------
@@ -287,7 +243,7 @@ def dungKnightTruoc(state, validActions):
     return 54
   else:
     return 0
-
+@njit
 def buildRoad(state, validActions):
   if 86 in validActions:
     # Khu của bản thân-----------------
@@ -319,30 +275,31 @@ def buildRoad(state, validActions):
       return True
 
   return False
-
+@njit
 def building(state, validActions):
-  arrBuilding = np.array([ 88, 87])
+  arrBuilding = np.array([ 87, 88])
   for k in arrBuilding:
     if k in validActions:
       return k
   return 0
-
+@njit
 def checkBuyDev(state, validActions):
   if 89 in validActions :
     if state[198] < 2 :
       return True
     nha = state[276:330]
     city = state[330: 384]  
-    if sum(nha - city) == 0: ### nếu không còn xây được thành phố
+    if sum(nha) == 0: ### nếu không còn xây được thành phố
       return True
   return False
-  
+
+
 def initPer():
   per = []
   per.append(np.zeros(1)) # đếm số lượt
-  per.append( np.zeros(1))
   return per
 
+@njit
 def agentCatan(state, per):
   if getReward(state) != -1:
     per[0] = 0
@@ -350,6 +307,7 @@ def agentCatan(state, per):
     per[0] += 1
   validActions = getValidActions(state)
   validActions = np.where( validActions )[0]
+
   phase = state[947: 963]
   if per[0] == 1: # đặt nhà đầu tiên---------------
     action = firstSettlements(state, validActions)
@@ -374,20 +332,39 @@ def agentCatan(state, per):
     action = building(state, validActions)
     # print('building', action)
     return action, per
+
   if buildRoad(state, validActions): ## có nên xây thêm đường không
     action = 86
     # print('buildRoad', action)
-    return 86, per
+    return action, per
+
   if checkBuyDev(state, validActions):
     action = 89
     # print('buyDev', action)
-    return 89, per
+    return action, per
 
   if phase[1] :
     action = xacDinhDuongPhuHop(state, validActions )
     # print('xayDuong', action)
     return action, per
 
-  action = validActions[np.random.randint(len(validActions))]
-  return action, per
+  if phase[15]:
+    ngLieu = state[193: 198]
+    min = np.min(ngLieu)
+    action = np.where( ngLieu == min )[0][0] + 59
+    if action in validActions:
+      # print('phase15:', action)
+      return action, per
 
+  if 91 in validActions :
+    action = 91
+    # print('trade: ', action)
+    return action, per
+
+  if 105 in validActions:
+    action = 105
+    # print('end trade: ', action)
+    return action, per
+  idx = np.random.randint(len(validActions))
+  action = validActions[idx]
+  return action, per
