@@ -163,7 +163,7 @@ def secondSettlements(state, validActions): ### đặt nhà thứ hai gần cả
         gTriNgL[0] = 6 - abs(thuocTinhVung(state, vung)[0] - 7)
     if arr[0] < gTriNgL[0]:
       arr = gTriNgL
-
+      
   #Vi tri cảng cần tìm
   ngL = np.where( arr>0 )[0][-1] - 1 ## nguyên liệu để chọn cảng
   action = -1
