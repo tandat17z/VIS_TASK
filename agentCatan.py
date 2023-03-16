@@ -1,4 +1,10 @@
 @njit
+def initPer():
+  per = []
+  per.append(np.zeros(1)) # đếm số lượt
+  return per
+
+@njit
 def vungKe( x): ### các ô gắn với đỉnh x
   x = int(x)
   vungKe = POINT_TILE[x]
@@ -292,12 +298,6 @@ def checkBuyDev(state, validActions):
     if sum(nha) == 0: ### nếu không còn xây được thành phố
       return True
   return False
-
-
-def initPer():
-  per = []
-  per.append(np.zeros(1)) # đếm số lượt
-  return per
 
 @njit
 def agentCatan(state, per):
