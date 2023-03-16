@@ -1,4 +1,11 @@
 @njit
+def initPer():
+  per = []
+  per.append(np.zeros(5))
+  per.append(np.zeros(5))
+  return per
+  
+@njit
 def getCardOnBoard(p_state): # 12 thẻ đang có trên bàn
   return p_state[18:150].reshape(12,11).copy()
 @njit
@@ -106,13 +113,7 @@ def holdCard(state):
       return 29
     else:
       return stt[np.random.randint(size)] + 16
- 
-def initPer():
-  per = []
-  per.append(np.zeros(5))
-  per.append(np.zeros(5))
-  return per
-  
+
 @njit
 def agentSplendor_v2(state, per):
   validActions = getValidActions(state)
