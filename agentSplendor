@@ -1,3 +1,4 @@
+@njit
 def initPer():
   per = []
   per.append(np.zeros(5))
