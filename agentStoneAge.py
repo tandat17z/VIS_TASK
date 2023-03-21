@@ -1,7 +1,7 @@
 @njit
 def initPer():
   per = []
-  per.append(np.zeros(1))
+  per.append(np.zeros((1,1)))
   return per
 
 @njit
@@ -42,7 +42,7 @@ def thuHoach(state, validActions):
   arr2 = getValidActions(state)[48: 56]
   action = 0
   if arr1[arr1 > 0].size:
-    policy = np.array([7, 6, 5 , 1, 2, 3, 4, 1])
+    policy = np.array([8, 7, 6, 2, 3, 4, 5, 1])
     arrActions = arr1 * policy
     action = np.argmax( arrActions) + 29
 
@@ -80,6 +80,7 @@ def chonNgL(state, validActions):
   if sum( arrAct):
     action = np.argmax( arrAct) + 64
   return action
+
 @njit
 def checkLuongThuc(state, validActions):
   myInfor = infor(state)[0]
@@ -128,6 +129,7 @@ def traNgLNuoi(state, validActions):
 def agentStoneAge(state, per):
   validActions = getValidActions(state)
   validActions = np.where(validActions)[0]
+
   #Đặt dân --------------------------------------
   phase = state[412: 423]
   myInfor = infor(state)[0]
@@ -135,7 +137,7 @@ def agentStoneAge(state, per):
     return 11, per
   if 13 in validActions and myInfor[2] < 8 and (myInfor[2]- myInfor[1]) > 5: # người
     return 13, per
-  if myInfor[33] == 0:
+  if myInfor[33] == 0 : #đặt công cụ
     if 12 in validActions:
       return 12, per
 
