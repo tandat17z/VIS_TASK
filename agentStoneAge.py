@@ -7,11 +7,9 @@ def initPer():
 @njit
 def civCard(state):
   return state[14: 110].reshape(4, 24)
-
 @njit
 def buildingCard(state):
   return state[110: 142].reshape(4, 8)
-
 @njit
 def infor(state):
   return state[142: 318].reshape(4, 44)
