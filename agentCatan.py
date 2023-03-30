@@ -1,3 +1,4 @@
+from Base.Catan.env import *
 @njit
 def initPer():
   per = []
@@ -311,41 +312,33 @@ def agentCatan(state, per):
   phase = state[947: 963]
   if per[0][0] == 1: # đặt nhà đầu tiên---------------
     action = firstSettlements(state, validActions)
-    # print('xaynha1', action)
     return action, per
   if per[0][0] == 3: # đặt nhà thứ hai-----------------
     action = secondSettlements(state, validActions)
-    # print('xaynha2', action)
     return action, per
   
   if diChuyenRobber(state) : #di chuyển Robber --------
     action = diChuyenRobber(state)
-    # print('dichuyenRobber', action)
     return action, per
 
   if dungKnightTruoc(state, validActions): #dùng knight đầu ván khi nhà đang bị cướp----------
     action = dungKnightTruoc(state, validActions)
-    # print('dungKnightTruoc', action)
     return action, per
 
   if building(state, validActions): ## xây nhà, thành phố khi có thể
     action = building(state, validActions)
-    # print('building', action)
     return action, per
 
   if buildRoad(state, validActions): ## có nên xây thêm đường không
     action = 86
-    # print('buildRoad', action)
     return action, per
 
   if checkBuyDev(state, validActions):
     action = 89
-    # print('buyDev', action)
     return action, per
 
   if phase[1] :
     action = xacDinhDuongPhuHop(state, validActions )
-    # print('xayDuong', action)
     return action, per
 
   if phase[15]:
@@ -353,18 +346,19 @@ def agentCatan(state, per):
     min = np.min(ngLieu)
     action = np.where( ngLieu == min )[0][0] + 59
     if action in validActions:
-      # print('phase15:', action)
       return action, per
 
   if 91 in validActions :
     action = 91
-    # print('trade: ', action)
     return action, per
 
   if 105 in validActions:
     action = 105
-    # print('end trade: ', action)
     return action, per
   idx = np.random.randint(len(validActions))
   action = validActions[idx]
   return action, per
+
+per = initPer()
+win, per = numba_main_2( agentCatan, 10, per, 1)
+win
