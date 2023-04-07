@@ -8,7 +8,7 @@
     * [4: 17]: Chọn lá bài yêu cầu ( lá bài = action - 4). ví dụ: Muốn yêu cầu lá số 0 thì là action 4, 
     
 ## :bust_in_silhouette: P_state
-    * [0:13]: Những lá bài của bản thân. Số lượng lá số k = state[k]
+    * [0:13]: Những lá bài của bản thân. Số lượng lá k = state[k]
     * [13: 15]: Số lượng lá trên tay và số điểm của bản thân.
     * [15 + i*3: 18 + i*3], i = 0, 1, 2: Thông tin của người chơi khác: Số lá trên tay, số điểm, lá bài cao nhất trong bộ 4.
     * [24]: Trên bàn còn bài để bốc không ( 1 là còn).
