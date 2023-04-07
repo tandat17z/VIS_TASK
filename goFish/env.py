@@ -81,7 +81,7 @@ def getValidActions(state):
 @njit
 def stepEnv(action, env):
   player_0 = env[113] % 4
-  arr_0 = env[53 + 15 * player_0: 68 + 15 * player_0] 
+  arr_0 = env[53 + 15 * player_0: 68 + 15 * player_0]
 
   if action == 0: # Bốc 1 là bài từ bộ bài
     laBai = int(env[52 - int(env[52])])
@@ -165,7 +165,21 @@ def stepEnv(action, env):
     while env[114] == 3:
       env[113] += 1 #chuyển sang người chơi khác
       new_pl = int( env[113] % 4)
-      if env[66 + new_pl*15] != 0 : #người chơi này còn bài 
+
+      # Nếu người tiếp theo hết bài và trên bàn còn bài ---> thì bốc đủ cho họ
+      new_arr = env[53 + new_pl*15: 68 + new_pl*15]
+      if env[52] and new_arr[13] == 0:
+        while env[52] > 0 and new_arr[13] < 5:
+          l_ = int( env[52 - int(env[52]) ])
+          env[52] -= 1
+          new_arr[l_] += 1
+          new_arr[13] += 1
+        #tinh diem
+        laBaicuaHo = new_arr[: 13]
+        new_arr[13] = np.sum( laBaicuaHo[laBaicuaHo < 4])
+        new_arr[14] = np.where( laBaicuaHo == 4)[0].size
+
+      if new_arr[13] != 0 : #người chơi này còn bài 
         env[114:117] = np.array([0,0,-1])
   else:
     env[117] = 1 
@@ -213,7 +227,7 @@ def getReward(state):
 
 # def visualizeEnv(env):
 #   print('ENV')
-#   print('Những là còn lại:',env[52], env[52- int(env[52]): 52])
+#   print('Những lá còn lại:',env[52], env[52- int(env[52]): 52])
 #   for i in range(4):
 #     print('--> p:',i, np.where((env[53 + 15*i: 66+ 15*i] > 0) & (env[53 + 15*i: 66+ 15*i] < 4) )[0], env[66+ 15*i: 68+ 15*i])
 #     print('arr', env[53 + 15*i: 66+ 15*i] )
@@ -221,12 +235,14 @@ def getReward(state):
 #   print(' PLAYER:', env[113] %4)
 
 # def visualizeState(state):
-#   print('arr: ', state[: 13], np.where((state[:13] > 0) & (state[:13]< 4) )[0])
-#   print(state[15: 18], state[18: 21], state[21: 24])
-#   print('so la con lai:', state[24])
-#   print('phase:', state[25: 28])
-#   print('ngBiYeuCau:', state[28: 31])
-#   print('endgame:', state[31])
+#   print('arr: ', state[: 13], np.where((state[:13] > 0) & (state[:13]< 4) )[0], state[13: 15])
+#   for i in range(3):
+#     print('-p:', np.where( state[15 + i*15: 28 + i*15] )[0], state[28 + i*15: 30 + i*15])
+#   print('so la con lai:', state[60])
+#   print('phase:', state[61: 64])
+#   print('ngBiYeuCau:', state[64: 67])
+#   print('endgame:', state[67])
+
 
 @njit
 def bot_lv0(state, per):
@@ -286,6 +302,7 @@ def one_game_normal(p0, list_other, per_player, per1, per2, per3, p1, p2, p3):
     result = 1
   else:
     result = 0
+  # print(list_other)
   return result, per_player
 
 def n_games_normal(p0, num_game, per_player, list_other, per1, per2, per3, p1, p2, p3):
@@ -300,15 +317,9 @@ def n_games_normal(p0, num_game, per_player, list_other, per1, per2, per3, p1, p
 @njit
 def one_game_numba(p0, list_other, per_player, per1, per2, per3, p1, p2, p3):
   env = initEnv()
-  # check = 0
   while env[113] < 400:
     idx = int(env[113]) % 4
-    # if env[113] == check:
-    #   check += 1
-    #   print('---------------------------------')
-    # visualizeEnv(env)
     player_state = getAgentState(env)
-    # visualizeState(player_state)
     if list_other[idx] == -1:
       action, per_player = p0(player_state,per_player)
       list_action = getValidActions(player_state)
