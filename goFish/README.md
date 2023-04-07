@@ -10,7 +10,7 @@
 ## :bust_in_silhouette: P_state
     * [0:13]: Những lá bài của bản thân. Số lượng lá k = state[k]
     * [13]: Số lượng lá trên tay của bản thân.
-    * [15]: Điểm của bản thân
+    * [14]: Điểm của bản thân
     * [15 + i*15: 30 + i*15], i = 0, 1, 2: Thông tin của người chơi khác:
         - [0: 13] Những bộ 4 ( 1 là có)
         - [13] Những lá còn lại
