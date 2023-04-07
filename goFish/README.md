@@ -26,8 +26,8 @@
         - [13: 15]: Số lượng lá trên tay và số điểm.
     * [113]: turn
     * [114]: phase ( có 4 phase: 0 là bốc, 1 là chọn người bị yêu cầu, 2 là chọn lá bài yêu cầu, 3 là chuyển sang người chơi khác)
-    * [115]: người đang bị yêu cầu ( 0 là không có ai, 1-3 )
-    * [116]: Lá bài yêu cầu (-1 là không yêu cầu lá nào, 0-12)
+    * [115]: người đang bị yêu cầu ( 0 là chưa chọn ai, 1-3 )
+    * [116]: Lá bài yêu cầu (-1 là chưa yêu cầu lá nào, 0-12)
     * [117]: EndGame
     
 # Luật bổ sung
