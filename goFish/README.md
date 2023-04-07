@@ -30,5 +30,5 @@
     * [116]: Lá bài yêu cầu (-1 là không yêu cầu lá nào, 0-12)
     * [117]: EndGame
     
-# Luật bổ sung **(để tìm ra người thắng duy nhất)**
+# Luật bổ sung
     Khi những người chơi bằng điểm nhau thì người có bộ cao nhất sẽ là người chiến thắng.
