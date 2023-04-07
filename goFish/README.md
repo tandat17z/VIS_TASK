@@ -1,6 +1,6 @@
 ##  Thông tin quan trọng
-    13: Điểm của bản thân
-    16, 19, 22: Điểm của người chơi khác
+    14: Điểm của bản thân
+    29, 44, 59: Điểm của người chơi khác
     
 ## :video_game: Action
     * [0]: Bốc 1 lá từ bộ bài.
@@ -9,15 +9,19 @@
     
 ## :bust_in_silhouette: P_state
     * [0:13]: Những lá bài của bản thân. Số lượng lá k = state[k]
-    * [13: 15]: Số lượng lá trên tay và số điểm của bản thân.
-    * [15 + i*3: 18 + i*3], i = 0, 1, 2: Thông tin của người chơi khác: Số lá trên tay, số điểm, lá bài cao nhất trong bộ 4.
-    * [24]: Trên bàn còn bài để bốc không ( 1 là còn).
-    * [25: 28]: Thông tin về PHASE của người chơi:
+    * [13]: Số lượng lá trên tay của bản thân.
+    * [15]: Điểm của bản thân
+    * [15 + i*15: 30 + i*15], i = 0, 1, 2: Thông tin của người chơi khác:
+        - [0: 13] Những bộ 4 ( 1 là có)
+        - [13] Những lá còn lại
+        - [14] Điểm
+    * [60]: Trên bàn còn bài để bốc không ( 1 là còn).
+    * [61: 64]: Thông tin về PHASE của người chơi:
         - 0: Bốc
         - 1: Chọn người chơi khác để yêu cầu
         - 2: Chọn lá bài muốn yêu cầu
-    * [28: 31]: Người bị yêu cầu.
-    * [31]: Game đã kết thúc hay chưa (1 là kết thúc rồi).
+    * [64: 67]: Người bị yêu cầu.
+    * [67]: Game đã kết thúc hay chưa (1 là kết thúc rồi).
 ## :globe_with_meridians: ENV_state
     * [0: 52]: Thứ tự các lá trên bộ bài
     * [52]: Số lá còn lại trên bộ bài bốc ---> Lá bài trên cùng để bốc = env[ 52 - env[52]]
