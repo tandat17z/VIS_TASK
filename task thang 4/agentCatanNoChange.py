@@ -237,7 +237,7 @@ def devCard(state, validActions):
   return 0
 
 @njit
-def agentCatanNoExchange(state, per):
+def Test(state, per):
   if getReward(state) != -1:
     per[0][0] = 0
   else: per[0][0] += 1
