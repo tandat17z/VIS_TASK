@@ -13,7 +13,7 @@
     * [14]: Điểm của bản thân
     * [15 + i*15: 30 + i*15], i = 0, 1, 2: Thông tin của người chơi khác:
         - [0: 13] Những bộ 4 ( 1 là có)
-        - [13] Những lá còn lại
+        - [13] Số lá trên tay
         - [14] Điểm
     * [60]: Trên bàn còn bài để bốc không ( 1 là còn).
     * [61: 64]: Thông tin về PHASE của người chơi:
