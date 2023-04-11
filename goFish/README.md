@@ -17,9 +17,9 @@
         - [14] Điểm
     * [60]: Trên bàn còn bài để bốc không ( 1 là còn).
     * [61: 64]: Thông tin về PHASE của người chơi:
-        - 0: Bốc
-        - 1: Chọn người chơi khác để yêu cầu
-        - 2: Chọn lá bài muốn yêu cầu
+        - 0: Chọn người chơi khác để yêu cầu
+        - 1: Chọn lá bài muốn yêu cầu
+        - 2: Bốc
     * [64: 67]: Người bị yêu cầu.
     * [67]: Game đã kết thúc hay chưa (1 là kết thúc rồi).
 ## :globe_with_meridians: ENV_state
@@ -29,7 +29,7 @@
         - [0: 13]: Những lá bài của người chơi.
         - [13: 15]: Số lượng lá trên tay và số điểm.
     * [113]: turn
-    * [114]: phase ( có 4 phase: 0 là bốc, 1 là chọn người bị yêu cầu, 2 là chọn lá bài yêu cầu, 3 là chuyển sang người chơi khác)
+    * [114]: phase ( có 4 phase: 0 là chọn người bị yêu cầu, 1 là chọn lá bài yêu cầu, 2 là Bốc, 3 là chuyển sang người chơi khác)
     * [115]: người đang bị yêu cầu ( 0 là chưa chọn ai, 1-3 )
     * [116]: Lá bài yêu cầu (-1 là chưa yêu cầu lá nào, 0-12)
     * [117]: EndGame
