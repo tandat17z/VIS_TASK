@@ -15,7 +15,7 @@
         - [0: 13] Những bộ 4 ( 1 là có)
         - [13] Số lá trên tay
         - [14] Điểm
-    * [60]: Trên bàn còn bài để bốc không ( 1 là còn).
+    * [60]: Số lá còn lại trên bàn.
     * [61: 64]: Thông tin về PHASE của người chơi:
         - 0: Chọn người chơi khác để yêu cầu
         - 1: Chọn lá bài muốn yêu cầu
